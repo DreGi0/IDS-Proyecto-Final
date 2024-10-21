@@ -120,7 +120,6 @@ class MainApp:
 
     def create_menu_buttons(self, options): # Crea los botones con las opcion dadas
         for i, (label, command) in enumerate(options):
-            print(i)
             ttk.Button(self.mainframe, text=label, command=command).grid(row=1, column=i, padx=10, pady=10)
         ttk.Button(self.mainframe, text="Volver al inicio", command=self.setup_role_selection).grid(row=2, column=0, columnspan=len(options))
 
