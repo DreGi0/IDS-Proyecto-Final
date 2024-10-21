@@ -165,22 +165,3 @@ if __name__ == "__main__":
     root = Tk()
     app = MainApp(root)
     root.mainloop()
-
-"""
-quiza antes de eso implementemos una por una las opciones que me diste de mejorar "Persistencia de Pedidos: Si tu intención es 
-gestionar los pedidos de los estudiantes, sería ideal tener algún mecanismo para almacenar y gestionar esos pedidos (quizá con 
-archivos de texto, bases de datos simples como SQLite o incluso archivos JSON) para que los administradores puedan acceder a un 
-historial o un reporte.
-
-Función de Confirmación de Pedidos: Tras seleccionar el plato, bebida y acompañamiento, podrías añadir una pantalla de confirmación 
-de pedido, donde el estudiante pueda revisar y confirmar su elección.
-
-Generación de Informes (Reportes): En la opción de administración, podrías generar informes de los pedidos realizados por día o por 
-semana. Aquí podrías usar pandas para filtrar y agrupar datos de los pedidos y luego mostrarlos o exportarlos en un archivo Excel o CSV.
-
-Seguridad del Administrador: Actualmente, la contraseña del administrador es estática ('123'). Podrías cifrar la contraseña y almacenarla 
-en un archivo o base de datos para mayor seguridad, o permitir que el administrador cambie su contraseña.
-
-Menú Dinámico: Si quieres que el menú de platos cambie con el tiempo o varíe según la disponibilidad, podrías cargarlo desde un archivo 
-de configuración o base de datos, en lugar de definir las opciones directamente en el código."
-"""
