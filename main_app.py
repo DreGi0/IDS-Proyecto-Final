@@ -124,7 +124,7 @@ class MainApp():
         submit_button = ttk.Button(self.login_fields_frame, text="Submit", command=self.process_login_action)
         submit_button.grid(column=0, row=2, columnspan=2, pady=10)
 
-    def toggle_password(self):
+    #def toggle_password(self):
 
 
     def create_login_field(self, label_text, var, command, column, row, show='', is_password=False):
