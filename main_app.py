@@ -53,10 +53,12 @@ class MainApp():
 
         self.style = ttk.Style()
 
-        self.style.configure("BW.TLabel", background="grey80")
+        self.style.configure("LoginFrame.TLabel", background="grey80")
+        self.style.configure("StudentMenuFrame.TLabel", background="lightCyan1")
+
         self.style.configure("M.TLabel", background="red")
 
-        self.style.configure("H1.TLabel", background="grey80", foreground="black", font=("Consolas", 16, "bold"))
+        self.style.configure("H1.TLabel", foreground="black", font=("Consolas", 16, "bold"))
         self.style.configure("H2.TLabel", background="grey80", foreground="black", font=("Consolas", 11))
         self.style.configure("LoginErr.TLabel", background="grey80", font=("Consolas", 9, "bold"))
 
@@ -64,14 +66,19 @@ class MainApp():
     
     def setup_styles_constants(self):
 
+        self.LOGIN_FRAME = "LoginFrame.TLabel"
+        self.LOGIN_ERR = "LoginErr.TLabel"
+
+        self.STUDENT_MENU_FRAME = "StudentMenuFrame.TLabel"
+
         self.HEADER1 = "H1.TLabel"
         self.HEADER2 = "H2.TLabel"
-        self.LOGIN_ERR = "LoginErr.TLabel"
 
     # ======================================== LOGIN WINDOW ========================================
     def setup_login_frame(self):
+        self.clear_frame(self.mainframe)
         
-        self.login_frame = ttk.Frame(self.mainframe, width=500, height=300, style="BW.TLabel")
+        self.login_frame = ttk.Frame(self.mainframe, width=500, height=300, style=self.LOGIN_FRAME)
         self.login_frame.grid(column=0, row=0)
         self.login_frame.grid_propagate(False)
 
@@ -79,7 +86,7 @@ class MainApp():
         self.login_frame.columnconfigure(1, weight=1)
 
 
-        welcome_label = ttk.Label(self.login_frame, text="Bienvenido", style=self.HEADER1, anchor='center')
+        welcome_label = ttk.Label(self.login_frame, text="Login", style=self.HEADER1, background="grey80", anchor='center')
         welcome_label.grid(column=0, row=0, columnspan=2, sticky='N, E, W', pady=50)
 
         self.setup_role_selection()
@@ -104,14 +111,14 @@ class MainApp():
 
     def setup_login_fields(self):
     
-        self.login_fields_frame = ttk.Frame(self.login_frame, width=450, height=100, style="BW.TLabel")
+        self.login_fields_frame = ttk.Frame(self.login_frame, width=450, height=100, style=self.LOGIN_FRAME)
         self.login_fields_frame.grid(column=0, row=2, columnspan=2, pady=10)
 
         self.handle_login_fields()
 
     def handle_login_fields(self, event=None):
 
-        self.clear_login_fields_frame()
+        self.clear_frame(self.login_fields_frame)
 
         if self.role.get() == self.ROLE_OPTIONS[0]:
             self.create_login_field("Ingrese su número de carnet: ", self.student_id, self.process_login_action, 0, 0)
@@ -128,6 +135,7 @@ class MainApp():
         intruction_label.grid(column=column, row=row, sticky="S", pady=5)
 
         entry = ttk.Entry(self.login_fields_frame, width=25, textvariable=var, show=show)
+        entry.delete(0, END)
         entry.grid(column=column+1, row=row, sticky="W, E", padx=10)
         entry.bind("<Return>", lambda event: command())
         entry.focus()
@@ -166,9 +174,10 @@ class MainApp():
 
         try:
             student_id_value = int(student_id_value)
+
             if student_id_value in self.student_table["Student ID"].values:
                 self.student_name = self.student_table.loc[self.student_table["Student ID"] == student_id_value, "Name"].values[0]
-                self.display_student_window()
+                self.setup_student_frame()
             else:
                 self.show_login_message("ID no encontrado.")
         except ValueError:
@@ -186,8 +195,6 @@ class MainApp():
             self.display_admin_window()
         else:
             self.show_login_message(message)
-
-
         
     # -------------------- VALIDACIÓN DE ADMINISTRADOR --------------------
     def show_login_message(self, message, color="red"):
@@ -200,23 +207,93 @@ class MainApp():
             self.error_message_widget = error_label
     
     # ======================================== STUDENT MAIN WINDOW ========================================
-
-    def display_student_window(self):
-
-        print(f"Show student menu for {self.student_id.get()}")
     
+    def setup_student_frame(self):
+
+        self.clear_frame(self.mainframe)
+        
+        self.student_frame = ttk.Frame(self.mainframe)
+        self.student_frame.grid(column=0, row=0)
+        self.student_frame.propagate(True)
+
+        self.student_frame.columnconfigure(0, weight=2)
+        self.student_frame.columnconfigure(1, weight=1)
+
+        self.setup_student_menu_frame()
+        self.setup_student_info_frame()
+
+    # -------------------- STUDENT MENU FRAME --------------------
+
+    def setup_student_menu_frame(self):
+
+        self.student_menu_frame = ttk.Frame(self.student_frame, style=self.STUDENT_MENU_FRAME)
+        self.student_menu_frame.grid(column=0, row=0)
+
+        ttk.Button(self.student_menu_frame, command=self.setup_student_daily_menu, text="menu del día").grid(column=0, row=1)
+
+    def setup_student_daily_menu(self):
+
+        self.clear_frame(self.student_menu_frame)
+
+        self.student_daily_menu_frame = ttk.Frame(self.student_menu_frame)
+        self.student_daily_menu_frame.grid(column=0, row=0)
+
+        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Plato fuerte").grid(column=0, row=1)
+        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Ensalada").grid(column=1, row=1)
+        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Acompañamiento").grid(column=0, row=2)
+        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Ensalda").grid(column=1, row=2)
+
+    # -------------------- STUDENT INFO FRAME --------------------
+
+    def setup_student_info_frame(self):
+
+        self.student_info_frame = ttk.Frame(self.student_frame, style=self.LOGIN_FRAME)
+        self.student_info_frame.grid(column=1, row=0)
+
+        ttk.Label(self.student_info_frame, text=self.student_name).grid(column=0, row=0)
+        ttk.Button(self.student_info_frame, command=print("Profile"), text="Perfil").grid(column=0, row=1, rowspan=2)
+
+        back = ttk.Button(self.student_info_frame, text="Logout", command=self.logout)
+        back.grid(column=0, row=3, columnspan=2)
+
     # ======================================== ADMIN MAIN WINDOW ========================================
 
     def display_admin_window(self):
 
-        print(f"Show admin menu for {self.admin_user.get()}")
+        self.clear_frame(self.mainframe)
 
+        
+        self.admin_frame = ttk.Frame(self.mainframe)
+        self.admin_frame.grid(column=0, row=0)
+        self.admin_frame.propagate(True)
+
+        welcome_label = ttk.Label(self.admin_frame, text=f"Bienvenido {self.admin_user.get()}", style=self.HEADER1, background="grey80", anchor='center')
+        welcome_label.grid(column=0, row=0, columnspan=2, sticky='N, E, W', pady=50)
+
+        self.admin_frame.columnconfigure(0, weight=2)
+        self.admin_frame.columnconfigure(1, weight=1)
+
+        ttk.Button(self.admin_frame, command=print(""), text="Administrar usuarios").grid(column=0, row=1)
+        ttk.Button(self.admin_frame, command=print(""), text="Ver ordenes del día").grid(column=1, row=1)
+
+
+
+        ttk.Button(self.admin_frame, command=print(""), text="Cambiar contraseña").grid(column=2, row=3)
+
+
+        back = ttk.Button(self.admin_frame, text="Logout", command=self.logout)
+        back.grid(column=1, row=3)
 
     # ======================================== GENERAL UTILITY FUNCTIONS ========================================
-    def clear_login_fields_frame(self):
+    
+    def logout(self):
+        self.setup_login_frame()
 
-        for widget in self.login_fields_frame.winfo_children():
+    def clear_frame(self, frame):
+
+        for widget in frame.winfo_children():
             widget.grid_forget()
+        
 
     def clear_error_message(self):
 

@@ -12,6 +12,16 @@ def load_student_data(file_path):
         print(f"Error loading the student data: {e}")
         return None
 
+def get_student_name_by_id(student_data, student_id):
+    try:
+        name = student_data.loc[student_data['Student ID'] == student_id, 'Name'].values
+        if len(name) > 0:
+            return name[0]
+        else:
+            return None
+    except Exception as e:
+        print(f"Error fetching name for ID {student_id}: {e}")
+        return None
 
 def validate_credentials(username, password):
     # Intentar cargar los usuarios del archivo JSON
