@@ -2,8 +2,6 @@ from tkinter import *
 from tkinter import ttk
 
 from scripts.data_processing import *
-from scripts.stat_calculations import *
-from utils.helpers import *
 
 """
 Comment definition
