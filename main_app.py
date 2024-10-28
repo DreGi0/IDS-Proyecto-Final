@@ -40,6 +40,7 @@ class MainApp():
 
     # ---------------------------------------- MAIN WINDOW CONFIGURATION ---------------------------------------- 
     def setup_app(self, root_window):
+
         # ----- Window properties -----
         root_window.title(f"CafeteriaGo version {version}")
         self.mainframe = ttk.Frame(root_window, padding="30 60 30 60")
@@ -51,6 +52,7 @@ class MainApp():
 
     # ---------------------------------------- STYLES CONFIGURATION ---------------------------------------- 
     def setup_styles(self):
+
         self.style = ttk.Style()
 
         self.style.configure("BW.TLabel", background="grey80")
@@ -58,13 +60,15 @@ class MainApp():
 
         self.style.configure("H1.TLabel", background="grey80", foreground="black", font=("Consolas", 16, "bold"))
         self.style.configure("H2.TLabel", background="grey80", foreground="black", font=("Consolas", 11))
-
+        self.style.configure("LoginErr.TLabel", background="grey80", font=("Consolas", 9, "bold"))
 
         self.setup_styles_constants()
     
     def setup_styles_constants(self):
+
         self.HEADER1 = "H1.TLabel"
         self.HEADER2 = "H2.TLabel"
+        self.LOGIN_ERR = "LoginErr.TLabel"
 
     # ======================================== LOGIN WINDOW ========================================
     def setup_login_frame(self):
@@ -111,10 +115,6 @@ class MainApp():
 
         self.clear_login_fields_frame()
 
-        self.show_pass = False
-        self.btn_toggle = ttk.Button(self.login_fields_frame, text="✅", command=self.toggle_password)
-        self.btn_toggle.grid(column=2, row=1, sticky="W", padx=5)
-
         if self.role.get() == self.ROLE_OPTIONS[0]:
             self.create_login_field("Ingrese su número de carnet: ", self.student_id, self.process_login_action, 0, 0)
         else:
@@ -122,10 +122,7 @@ class MainApp():
             self.create_login_field("Contraseña: ", self.admin_pass, self.process_login_action, 0, 1, "*", True)
 
         submit_button = ttk.Button(self.login_fields_frame, text="Submit", command=self.process_login_action)
-        submit_button.grid(column=0, row=2, columnspan=2, pady=10)
-
-    #def toggle_password(self):
-
+        submit_button.grid(column=0, row=3, columnspan=2, pady=10)
 
     def create_login_field(self, label_text, var, command, column, row, show='', is_password=False):
 
@@ -134,62 +131,99 @@ class MainApp():
 
         entry = ttk.Entry(self.login_fields_frame, width=25, textvariable=var, show=show)
         entry.grid(column=column+1, row=row, sticky="W, E", padx=10)
-        entry.bind("<Return>", lambda event: command()) # Liga el comando con la tecla Return (Enter)
-        entry.focus() # Cuando es creado se selecciona
+        entry.bind("<Return>", lambda event: command())
+        entry.focus()
 
         if is_password:
-            # Checkbox para mostrar/ocultar contraseña
-            chk_mostrar_var = BooleanVar(value=True)  # Estado inicial como "oculto"
-            mostrar_checkbox = ttk.Checkbutton(
-                self.login_fields_frame, 
-                text="Mostrar contraseña", 
-                variable=chk_mostrar_var, 
-                command=lambda: entry.config(show="*" if chk_mostrar_var.get() else "")
-            )
-            mostrar_checkbox.grid(column=column+1, row=row+1, sticky="W")
+            chk_show_var = BooleanVar(value=False)
 
+            show_checkbox = ttk.Checkbutton(
+                self.login_fields_frame, 
+                variable=chk_show_var, 
+                command=lambda: entry.config(show="" if chk_show_var.get() else "*")
+            )
+            show_checkbox.grid(column=column+2, row=row, sticky="W")
 
     def process_login_action(self):
+
         role_validators = {
-            "Student": self.validate_student, 
-            "Admin": self.validate_admin
+            self.ROLE_OPTIONS[0]: self.validate_student, 
+            self.ROLE_OPTIONS[1]: self.validate_admin
         }
         
         selected_role = self.role.get()
         validator = role_validators.get(selected_role)
 
         if validator:
-            input_value = self.student_id.get() if selected_role == "Estudiante" else self.manager_pass.get()
-            validator(input_value)
+            if selected_role == self.ROLE_OPTIONS[0]:
+                input_value = self.student_id.get()
+                validator(input_value)
+            else:
+                input_value1 = self.admin_user.get()
+                input_value2 = self.admin_pass.get()
+                validator(input_value1, input_value2)
+
     
-    def validate_student(self, student_id_value): # Valida si existe el id del estudiante y si se presenta un error lo muestra en pantalla
+    def validate_student(self, student_id_value):
+
         try:
             student_id_value = int(student_id_value)
             if student_id_value in self.student_table["Student ID"].values:
                 self.student_name = self.student_table.loc[self.student_table["Student ID"] == student_id_value, "Name"].values[0]
-                self.display_main_menu_for_student()
+                self.display_student_window()
             else:
-                self.show_error_message("ID no encontrado.")
+                self.show_login_message("ID no encontrado.")
         except ValueError:
-            self.show_error_message("Por favor ingrese un ID válido.")
+            self.show_login_message("Por favor ingrese un ID válido.")
         except Exception as e:
-            self.show_error_message(f"Error: {e}")
+            self.show_login_message(f"Error: {e}")
 
     # -------------------- VALIDACIÓN DE ADMINISTRADOR --------------------
-    def validate_admin(self, password):
-        hashed_password = load_admin_password()
+    def validate_admin(self, username, password):
 
-        if hashed_password and bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-            self.display_main_menu_for_admin()
+        is_valid, message = validate_credentials(username, password)
+
+        if is_valid:
+            self.show_login_message(message, "green")
+            self.display_admin_window()
         else:
-            self.show_error_message("Contraseña incorrecta")
+            self.show_login_message(message)
 
-    # ======================================== UTILITY FUNCTIONS ========================================
-    def clear_login_fields_frame(self):
+
         
-        print("Hello")
+    # -------------------- VALIDACIÓN DE ADMINISTRADOR --------------------
+    def show_login_message(self, message, color="red"):
+            
+            self.clear_error_message()
+
+            error_label = ttk.Label(self.login_fields_frame, text=message, foreground=color, style=self.LOGIN_ERR)
+            error_label.grid(column=0, row=2, columnspan=2)
+
+            self.error_message_widget = error_label
+    
+    # ======================================== STUDENT MAIN WINDOW ========================================
+
+    def display_student_window(self):
+
+        print(f"Show student menu for {self.student_id.get()}")
+    
+    # ======================================== ADMIN MAIN WINDOW ========================================
+
+    def display_admin_window(self):
+
+        print(f"Show admin menu for {self.admin_user.get()}")
+
+
+    # ======================================== GENERAL UTILITY FUNCTIONS ========================================
+    def clear_login_fields_frame(self):
+
         for widget in self.login_fields_frame.winfo_children():
             widget.grid_forget()
+
+    def clear_error_message(self):
+
+        if hasattr(self, 'error_message_widget') and self.error_message_widget.winfo_ismapped():
+            self.error_message_widget.grid_forget()
 
 
 # ======================================== RUN APP ========================================
