@@ -46,8 +46,8 @@ Para fines de testeo, puedes utilizar los siguientes usuarios y contraseñas par
 | **ID** |  **Nombre**  |
 | ------ | ------------ |
 | 202401 | Estudiante1  |
-| 202401 | Estudiante2  |
-| 202401 | Estudiante3  |
+| 202402 | Estudiante2  |
+| 202403 | Estudiante3  |
 |   ...  |     ...      |
 | 202431 | Estudiante31 |
 
