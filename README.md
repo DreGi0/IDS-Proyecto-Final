@@ -12,8 +12,6 @@ Dana Liz Ochoa González,
 
 Oscar Marcelo Velásquez Zapata 
 
-1. La libreria Pandas este instalada 'pip install pandas'
-
 > [!WARNING]
 > En caso de tener problemas con el archivo asegurarse de:
 > 1. Instalar la libreria Pandas este instalada 'pip install pandas'
