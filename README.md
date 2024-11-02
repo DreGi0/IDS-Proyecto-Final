@@ -14,9 +14,9 @@ Oscar Marcelo Velásquez Zapata
 
 > [!WARNING]
 > En caso de tener problemas con el archivo asegurarse de:
-> 1. Instalar la libreria Pandas este instalada 'pip install pandas'
-> 2. Instalar la libreria de BCrypt 'pip install bcrypt'
-> 3. Instalar la libreria de openpyxl 'pip install openpyxl'
+> 1. Instalar la libreria Pandas este instalada ```bash 'pip install pandas'
+> 2. Instalar la libreria de BCrypt ```bash 'pip install bcrypt'
+> 3. Instalar la libreria de openpyxl ```bash 'pip install openpyxl'
 
 > [!IMPORTANT]
 > **En caso de no poder iniciar como estudiante, asegurarse que todo el archivo del poryecto esta abierto con el IDE**
