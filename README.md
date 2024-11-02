@@ -12,13 +12,22 @@ Dana Liz Ochoa González,
 
 Oscar Marcelo Velásquez Zapata 
 
-## En caso de tener problemas con el archivo asegurar que
+## 
 1. La libreria Pandas este instalada 'pip install pandas'
 
-> [!TIP]
-> Helpful advice for doing things better or more easily.
+> [!WARNING]
+> En caso de tener problemas con el archivo asegurarse de:
+> 1. Instalar la libreria Pandas este instalada 'pip install pandas'
+> 2. Instalar la libreria de BCrypt 'pip install bcrypt'
+> 3. Instalar la libreria de openpyxl 'pip install openpyxl'
 
 > [!IMPORTANT]
-> Key information users need to know to achieve their goal.
+> En caso de no poder iniciar como estudiante, asegurarse que todo el archivo del poryecto esta abierto con el IDE
 
-> [!WARNING]
+> [!TIP]
+> Los id de los estudiantes se encuntran en 'data\students_data.xlsx'
+
+> [!TIP]
+> Los perfiles de administradores se encuentran en 'data\json\admin_password.json'
+> Las constraseñas y usaurios son:
+
