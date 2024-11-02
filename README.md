@@ -42,6 +42,16 @@ Estas librerías son esenciales para manejar el cifrado de contraseñas y la man
 
 Para fines de testeo, puedes utilizar los siguientes usuarios y contraseñas para probar la funcionalidad del proyecto:
 
+### Estudiantes
+| **ID** |  **Nombre**  |
+| ------ | ------------ |
+| 202401 | Estudiante1  |
+| 202401 | Estudiante2  |
+| 202401 | Estudiante3  |
+|   ...  |     ...      |
+| 202431 | Estudiante31 |
+
+### Administradores
 | **Usuarios** | **Contraseñas** |
 | ------------ | --------------- |
 | admin        | 123             |
