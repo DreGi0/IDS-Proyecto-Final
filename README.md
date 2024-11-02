@@ -1,41 +1,29 @@
-# IDS-Proyecto-Final
- 
-## Ingegrantes del equipo:
+# IDS - Proyecto Final
 
-Debbie Nicole Cruz Alvarado, 
+## Integrantes del Equipo
 
-André Giovanni Iraheta Guevara,   
+- Debbie Nicole Cruz Alvarado
+- André Giovanni Iraheta Guevara
+- Tiffany Lisbeth Meléndez Ramos
+- Dana Liz Ochoa González
+- Oscar Marcelo Velásquez Zapata
 
-Tiffany Lisbeth Meléndez Ramos, 
+## Requisitos del Proyecto
 
-Dana Liz Ochoa González, 
+> ⚠️ **Advertencia:** Si tienes problemas con el archivo, asegúrate de:
+> 1. Tener instalada la librería `Pandas`: `pip install pandas`
+> 2. Tener instalada la librería `BCrypt`: `pip install bcrypt`
+> 3. Tener instalada la librería `openpyxl`: `pip install openpyxl`
 
-Oscar Marcelo Velásquez Zapata 
+> 🔴 **Importante:** En caso de no poder iniciar como estudiante, asegúrate de que todo el archivo del proyecto esté abierto con el IDE.
 
-> [!WARNING]
-> En caso de tener problemas con el archivo asegurarse de:
-> 1. Instalar la libreria Pandas este instalada ```bash 'pip install pandas'
-> 2. Instalar la libreria de BCrypt ```bash 'pip install bcrypt'
-> 3. Instalar la libreria de openpyxl ```bash 'pip install openpyxl'
+> 💡 **Tip:** Los ID de los estudiantes se encuentran en el archivo `data/students_data.xlsx`.
 
-> [!IMPORTANT]
-> **En caso de no poder iniciar como estudiante, asegurarse que todo el archivo del poryecto esta abierto con el IDE**
+> 💡 **Tip:** Los perfiles de administradores se encuentran en `data/json/admin_password.json`.
 
-> [!TIP]
-> **Los ID de los estudiantes se encuntran en** 'data\students_data.xlsx'
+## Usuarios y Contraseñas de Testeo
 
-> [!TIP]
-> **Los perfiles de administradores se encuentran en** 'data\json\admin_password.json'
-
-## Usuarios y contraseñas de testeo
-Usuario: admin
-Contraseña: 123
-
-Usuario: Dre
-Contraseña: 321
-
-| Usuarios  | Contraseñas |
-| --------- | ----------- |
-| admin     | 123         |
-| Dre       | 321         |
-
+| **Usuarios** | **Contraseñas** |
+| ------------ | --------------- |
+| admin        | 123             |
+| Dre          | 321             |
