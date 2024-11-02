@@ -16,7 +16,7 @@
 > 3. Tener instalada la librería `openpyxl`: `pip install openpyxl`
 
 > 🔴 **Importante:** En caso de no poder iniciar como estudiante o se muestre el error en consola
-> `Error loading the student data: [Errno 2] No such file or directory: 'data/students_data.xlsx'`.
+> `Error loading the student data: [Errno 2] No such file or directory: 'data/students_data.xlsx'`
 > Asegúrate de que todo el archivo del proyecto esté abierto con el IDE.
 
 > 💡 **Tip:** Los ID de los estudiantes se encuentran en el archivo `data/students_data.xlsx`.
