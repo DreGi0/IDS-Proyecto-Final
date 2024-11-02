@@ -1,6 +1,6 @@
 # IDS - Proyecto Final
 
-Este repositorio contiene el proyecto final para la carrera de Ingeniería de Negocios. A continuación, se presentan los detalles del equipo de trabajo, los requisitos para ejecutar el proyecto sin errores y las credenciales de prueba que puedes utilizar para probar las funciones de la aplicación.
+Este repositorio contiene el proyecto final para la materia de Introducción al Desarrollo de Sowftware. A continuación, se presentan los detalles del equipo de trabajo, los requisitos para ejecutar el proyecto sin errores y las credenciales de prueba que puedes utilizar para probar las funciones de la aplicación.
 
 ## Integrantes del Equipo
 
