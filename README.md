@@ -34,3 +34,8 @@ Contraseña: 123
 Usuario: Dre
 Contraseña: 321
 
+| Usuarios  | Contraseñas |
+| ------------- | ------------- |
+| admin  | 123  |
+| Dre  | 321  |
+
