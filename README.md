@@ -18,7 +18,11 @@ Este proyecto requiere algunas librerías de Python para su correcto funcionamie
 > 
 > ```bash
 > pip install pandas
+> ```
+> ```bash
 > pip install bcrypt
+> ```
+> ```bash
 > pip install openpyxl
 > ```
 
