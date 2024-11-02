@@ -61,4 +61,4 @@ Para fines de testeo, puedes utilizar los siguientes usuarios y contraseñas par
 
 ---
 
-¡Buena suerte y que tengas una excelente experiencia de desarrollo y prueba con el proyecto!
+¡Cruzamos dedos para que todo funcione y nos ponga 10!
