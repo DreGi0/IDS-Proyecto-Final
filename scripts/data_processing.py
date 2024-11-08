@@ -4,6 +4,7 @@ import json
 import os
 
 password_file_path = os.path.join("data/json", "admin_password.json")
+orders_file_path = os.path.join("data/json", "orders.json")
 
 def load_student_data(file_path):
     try:
@@ -43,7 +44,6 @@ def validate_credentials(username, password):
             return False, "Contraseña incorrecta."
     else:
         return False, "Usuario no encontrado."
-
 
 def save_admin_credentials(username, password, email=None):
 
@@ -90,3 +90,26 @@ def update_password(username, new_password):
         print(f"Contraseña de {username} actualizada con éxito.")
     else:
         print(f"Usuario {username} no encontrado.")
+
+def save_student_order(st_name, st_id, plate, salad, drink, accompaniment):
+    order_data = {
+        f"{st_id} {st_name}": {
+            'Plate': plate,
+            'Accompaniment': accompaniment,
+            'Salad': salad,
+            'Drink': drink
+        }
+    }
+
+    try:
+        with open(orders_file_path, 'r') as f:
+            orders = json.load(f)
+
+    except (FileNotFoundError, json.JSONDecodeError):
+        orders = {}
+
+    orders.update(order_data)
+
+    with open(orders_file_path, 'w') as f:
+        json.dump(orders, f, indent=4)
+

@@ -26,6 +26,9 @@ Este proyecto requiere algunas librerías de Python para su correcto funcionamie
 > ```bash
 > pip install openpyxl
 > ```
+> ```bash
+> pip install pillow 
+> ```                                                              
 
 Estas librerías son esenciales para manejar el cifrado de contraseñas y la manipulación de archivos Excel.
 

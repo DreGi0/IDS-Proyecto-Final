@@ -1,7 +1,11 @@
 from tkinter import *
 from tkinter import ttk
 
+from PIL import Image, ImageTk 
+
 from scripts.data_processing import *
+from scripts.image_processing import *
+
 
 """
 Comment definition
@@ -33,6 +37,11 @@ class MainApp():
         self.admin_user = StringVar()
         self.admin_pass = StringVar()
 
+        self.selected_plate = None
+        self.selected_salad = None
+        self.selected_acompanamiento = None
+        self.selected_drink = None
+
         # ----- Iniciar widget de login -----
         self.setup_login_frame()
 
@@ -62,6 +71,14 @@ class MainApp():
         self.style.configure("H2.TLabel", background="grey80", foreground="black", font=("Consolas", 11))
         self.style.configure("LoginErr.TLabel", background="grey80", font=("Consolas", 9, "bold"))
 
+        self.style.configure("STLogBG.TLabel", background="dodgerBlue4", font=("Consolas", 9, "bold"))
+
+        self.style.configure("test1.TLabel", background = "red")
+        self.style.configure("test2.TLabel", background = "green")
+        self.style.configure("test3.TLabel", background = "blue")
+
+
+
         self.setup_styles_constants()
     
     def setup_styles_constants(self):
@@ -70,9 +87,14 @@ class MainApp():
         self.LOGIN_ERR = "LoginErr.TLabel"
 
         self.STUDENT_MENU_FRAME = "StudentMenuFrame.TLabel"
+        self.STUDENT_BG_INFO_FRAME = "STLogBG.TLabel"
 
         self.HEADER1 = "H1.TLabel"
         self.HEADER2 = "H2.TLabel"
+
+        self.TEST1 = "test1.TLabel"
+        self.TEST2 = "test2.TLabel"
+        self.TEST3 = "test3.TLabel"
 
     # ======================================== LOGIN WINDOW ========================================
     def setup_login_frame(self):
@@ -80,7 +102,7 @@ class MainApp():
         
         self.login_frame = ttk.Frame(self.mainframe, width=500, height=300, style=self.LOGIN_FRAME)
         self.login_frame.grid(column=0, row=0)
-        self.login_frame.grid_propagate(False)
+        self.login_frame.grid_propagate(True)
 
         self.login_frame.columnconfigure(0, weight=1)
         self.login_frame.columnconfigure(1, weight=1)
@@ -207,54 +229,85 @@ class MainApp():
             self.error_message_widget = error_label
     
     # ======================================== STUDENT MAIN WINDOW ========================================
-    
     def setup_student_frame(self):
-
+        # Limpia el contenido de mainframe
         self.clear_frame(self.mainframe)
-        
-        self.student_frame = ttk.Frame(self.mainframe)
-        self.student_frame.grid(column=0, row=0)
-        self.student_frame.propagate(True)
+        self.mainframe.configure(padding="0 0 0 0")
 
-        self.student_frame.columnconfigure(0, weight=2)
-        self.student_frame.columnconfigure(1, weight=1)
-
-        self.setup_student_menu_frame()
-        self.setup_student_info_frame()
-
-    # -------------------- STUDENT MENU FRAME --------------------
-
-    def setup_student_menu_frame(self):
-
-        self.student_menu_frame = ttk.Frame(self.student_frame, style=self.STUDENT_MENU_FRAME)
-        self.student_menu_frame.grid(column=0, row=0)
-
-        ttk.Button(self.student_menu_frame, command=self.setup_student_daily_menu, text="menu del día").grid(column=0, row=1)
-
-    def setup_student_daily_menu(self):
-
-        self.clear_frame(self.student_menu_frame)
-
-        self.student_daily_menu_frame = ttk.Frame(self.student_menu_frame)
-        self.student_daily_menu_frame.grid(column=0, row=0)
-
-        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Plato fuerte").grid(column=0, row=1)
-        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Ensalada").grid(column=1, row=1)
-        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Acompañamiento").grid(column=0, row=2)
-        ttk.Button(self.student_daily_menu_frame, command=print(""), text="Ensalda").grid(column=1, row=2)
-
-    # -------------------- STUDENT INFO FRAME --------------------
-
-    def setup_student_info_frame(self):
-
-        self.student_info_frame = ttk.Frame(self.student_frame, style=self.LOGIN_FRAME)
+        # Configuración del frame de información del estudiante
+        self.student_info_frame = ttk.Frame(self.mainframe, width=300, height=600, style=self.STUDENT_BG_INFO_FRAME)
         self.student_info_frame.grid(column=1, row=0)
+        self.student_info_frame.grid_propagate(False)
 
-        ttk.Label(self.student_info_frame, text=self.student_name).grid(column=0, row=0)
-        ttk.Button(self.student_info_frame, command=print("Profile"), text="Perfil").grid(column=0, row=1, rowspan=2)
+        # Imagen y etiquetas de información del estudiante en el frame de información
+        st_menu_resized_separator_image = get_image("Media/User.png", 50, 50)
+        self.student_image_separator = ImageTk.PhotoImage(st_menu_resized_separator_image)
+        ttk.Label(self.student_info_frame, image=self.student_image_separator).grid(column=0, row=0, sticky="n", pady=(10, 5))
+        
+        ttk.Label(self.student_info_frame, text=self.student_name, style=self.HEADER1).grid(column=0, row=1)
+        ttk.Label(self.student_info_frame, text=self.student_id.get(), style=self.HEADER1).grid(column=0, row=2)
+        
+        # Botón de cerrar sesión en el frame de información
+        ttk.Button(self.student_info_frame, text="Cerrar sesión", command=self.logout).grid(column=0, row=3)
+        
+        # Configuración del frame principal del menú del estudiante
+        self.student_menu_frame = ttk.Frame(self.mainframe, width=900, height=600, style=self.STUDENT_MENU_FRAME)
+        self.student_menu_frame.grid(column=0, row=0)
+        self.student_menu_frame.grid_propagate(False)
+        
+        # Etiqueta de bienvenida en el frame del menú
+        ttk.Label(self.student_menu_frame, text="Bienvenido", style=self.HEADER1).grid(column=0, row=0)
+        
+        # Configuración del frame de opciones del menú del estudiante
+        self.student_menu_options_frame = ttk.Frame(self.student_menu_frame, style=self.STUDENT_BG_INFO_FRAME)
+        self.student_menu_options_frame.grid(column=0, row=2)
+        
+        # Diccionario de opciones para cada categoría
+        self.menu_options = {
+            "Plato fuerte": ["Pollo", "Carne", "Pescado", "Vegetariano"],
+            "Ensalada": ["César", "Mixta", "De pasta", "Caprese"],
+            "Acompañamiento": ["Arroz", "Papas", "Vegetales", "Pan"],
+            "Bebida": ["Agua", "Jugo", "Refresco", "Café"]
+        }
 
-        back = ttk.Button(self.student_info_frame, text="Logout", command=self.logout)
-        back.grid(column=0, row=3, columnspan=2)
+        # Botones en el frame de opciones del menú
+        ttk.Button(self.student_menu_options_frame, text="Plato fuerte", command=lambda: self.show_menu_options("Plato fuerte")).grid(column=0, row=0)
+        ttk.Button(self.student_menu_options_frame, text="Ensalada", command=lambda: self.show_menu_options("Ensalada")).grid(column=0, row=1)
+        ttk.Button(self.student_menu_options_frame, text="Acompañamiento", command=lambda: self.show_menu_options("Acompañamiento")).grid(column=0, row=2)
+        ttk.Button(self.student_menu_options_frame, text="Bebida", command=lambda: self.show_menu_options("Bebida")).grid(column=0, row=3)
+
+        # Frame donde se mostrarán las opciones seleccionadas
+        self.student_menu_served_frame = ttk.Frame(self.student_menu_frame, style=self.STUDENT_BG_INFO_FRAME)
+        self.student_menu_served_frame.grid(column=1, row=2)
+
+    def show_menu_options(self, category):
+        # Limpiar el contenido anterior del frame `student_menu_served_frame`
+        for widget in self.student_menu_served_frame.winfo_children():
+            widget.destroy()
+        
+        # Obtener las opciones de la categoría seleccionada
+        options = self.menu_options.get(category, [])
+
+        # Crear un botón para cada opción en `student_menu_served_frame`
+        for idx, option in enumerate(options):
+            ttk.Button(self.student_menu_served_frame, text=option, 
+                       command=lambda opt=option, cat=category: self.select_option(opt, cat)).grid(column=0, row=idx, pady=(5, 5))
+
+    def select_option(self, option, category):
+        # Asignar la opción seleccionada a la variable correspondiente según la categoría
+        if category == "Plato fuerte":
+            self.selected_plate = option
+        elif category == "Ensalada":
+            self.selected_salad = option
+        elif category == "Acompañamiento":
+            self.selected_acompanamiento = option
+        elif category == "Bebida":
+            self.selected_drink = option
+
+        # Mostrar la opción seleccionada en la interfaz (opcional)
+        print(f"Seleccionaste {option} en {category}")
+
+        save_student_order(self.student_name, self.student_id.get(), self.selected_plate,self.selected_salad ,self.selected_drink , self.selected_acompanamiento)
 
     # ======================================== ADMIN MAIN WINDOW ========================================
 
