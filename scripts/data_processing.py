@@ -116,6 +116,9 @@ def save_student_order(st_name, st_id, plate, salad, drink, accompaniment):
     with open(orders_file_path, 'w') as f:
         json.dump(orders, f, indent=4)
 
+def delete_student_ordes():
+    with open(orders_file_path, 'w') as f:
+        json.dump({}, f)
 
 def format_student_data(student_data):
     formatted_data = []

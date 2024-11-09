@@ -1,18 +1,12 @@
 {
     "202401 Estudiante 1": {
         "Plate": "Pollo",
-        "Accompaniment": "Vegetales",
-        "Salad": "Mixta",
-        "Drink": "Caf\u00e9"
+        "Accompaniment": "Papas",
+        "Salad": "Caprese",
+        "Drink": "Refresco"
     },
     "202410 Estudiante 10": {
-        "Plate": "Pescado",
-        "Accompaniment": null,
-        "Salad": "De pasta",
-        "Drink": "Caf\u00e9"
-    },
-    "202420 Estudiante 20": {
-        "Plate": "Pescado",
+        "Plate": "Vegetariano",
         "Accompaniment": "Vegetales",
         "Salad": "Mixta",
         "Drink": "Agua"

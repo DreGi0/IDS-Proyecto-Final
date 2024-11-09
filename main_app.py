@@ -51,7 +51,7 @@ class MainApp():
 
         # ----- Window properties -----
         root_window.title(f"CafeteriaGo version {version}")
-        self.mainframe = ttk.Frame(root_window, padding="30 60 30 60")
+        self.mainframe = ttk.Frame(root_window, padding="10 20 10 20")
 
         # ----- Main grid -----
         self.mainframe.grid(column=0, row=0)
@@ -101,8 +101,12 @@ class MainApp():
     def setup_login_frame(self):
         self.clear_frame(self.mainframe)
         
+        st_menu_resized_separator_image = get_image("Media/esen_logo.png", 100, 100)
+        self.student_image_user = ImageTk.PhotoImage(st_menu_resized_separator_image)
+        ttk.Label(self.mainframe, image=self.student_image_user).grid(column=0, row=0, sticky="n", pady=(0, 5))
+        
         self.login_frame = ttk.Frame(self.mainframe, width=500, height=300, style=self.LOGIN_FRAME)
-        self.login_frame.grid(column=0, row=0)
+        self.login_frame.grid(column=0, row=1)
         self.login_frame.grid_propagate(True)
 
         self.login_frame.columnconfigure(0, weight=1)
@@ -242,8 +246,8 @@ class MainApp():
 
         # Imagen y etiquetas de información del estudiante en el frame de información
         st_menu_resized_separator_image = get_image("Media/User.png", 50, 50)
-        self.student_image_separator = ImageTk.PhotoImage(st_menu_resized_separator_image)
-        ttk.Label(self.student_info_frame, image=self.student_image_separator).grid(column=0, row=0, sticky="n", pady=(10, 5))
+        self.student_image_user = ImageTk.PhotoImage(st_menu_resized_separator_image)
+        ttk.Label(self.student_info_frame, image=self.student_image_user).grid(column=0, row=0, sticky="n", pady=(10, 5))
         
         ttk.Label(self.student_info_frame, text=self.student_name, style=self.HEADER1).grid(column=0, row=1)
         ttk.Label(self.student_info_frame, text=self.student_id.get(), style=self.HEADER1).grid(column=0, row=2)
@@ -324,8 +328,8 @@ class MainApp():
 
         # Imagen y etiquetas de información del estudiante en el frame de información
         st_menu_resized_separator_image = get_image("Media/User.png", 50, 50)
-        self.student_image_separator = ImageTk.PhotoImage(st_menu_resized_separator_image)
-        ttk.Label(self.admin_info_frame, image=self.student_image_separator).grid(column=0, row=0, sticky="n", pady=(10, 5))
+        self.student_image_user = ImageTk.PhotoImage(st_menu_resized_separator_image)
+        ttk.Label(self.admin_info_frame, image=self.student_image_user).grid(column=0, row=0, sticky="n", pady=(10, 5))
         
         ttk.Label(self.admin_info_frame, text=self.current_admin_info["name"], style=self.HEADER1).grid(column=0, row=1)
         ttk.Label(self.admin_info_frame, text=self.current_admin_info["email"], style=self.HEADER1).grid(column=0, row=2)
@@ -334,9 +338,11 @@ class MainApp():
         ttk.Button(self.admin_info_frame, text="Pedidos", command=self.show_order_list).grid(column=0, row=4)
         ttk.Button(self.admin_info_frame, text="Cambiar contraseña", command=self.setup_change_password_frame).grid(column=0, row=5)
 
+
         
         # Botón de cerrar sesión en el frame de información
         ttk.Button(self.admin_info_frame, text="Cerrar sesión", command=self.logout).grid(column=0, row=6)
+        ttk.Button(self.admin_info_frame, text="Borrar pedidos", command=self.setup_delete_orders_frame).grid(column=0, row=7)
 
         self.admin_data_frame = ttk.Frame(self.mainframe, width=900, height=600)
         self.admin_data_frame.grid(column=0, row=0)
@@ -350,7 +356,7 @@ class MainApp():
         self.student_list_frame.grid_propagate(False)
     
     def show_student_list(self):
-        self.clear_frame(self.student_list_frame)
+        self.clear_frame(self.admin_data_frame)
 
         current_row = 1
         
@@ -364,7 +370,7 @@ class MainApp():
         current_row = 1
         
         for i in get_all_orders():
-            ttk.Label(self.admin_data_frame, text=i, style=self.STUDENT_MENU_FRAME).grid(column=0, row=current_row)
+            ttk.Label(self.student_list_frame, text=i, style=self.STUDENT_MENU_FRAME).grid(column=0, row=current_row)
             current_row += 1
 
     # ======================================== CHANGE PASSWORD WINDOW ========================================
@@ -440,6 +446,25 @@ class MainApp():
 
             self.clear_error_message_pass = error_label
 
+    # ======================================== DELETE ORDERS WINDOW ========================================
+    def setup_delete_orders_frame(self):
+        self.delete_order_window = Toplevel()
+        self.delete_order_window.title("Cambiar contraseña")
+        self.delete_order_window.geometry("200x200")
+
+        ttk.Label(self.delete_order_window, text="¿Estas seguro?").grid(column=0, row=0, columnspan=2) 
+
+        self.yes_btn = ttk.Button(self.delete_order_window, text="Si", command=lambda: self.confirm_order_delete(True))
+        self.yes_btn.grid(column=0, row=1)
+
+        self.no_btn = ttk.Button(self.delete_order_window, text="No", command=lambda: self.confirm_order_delete(False))
+        self.no_btn.grid(column=1, row=1)
+        
+    def confirm_order_delete(self, delete):
+        if delete:
+            delete_student_ordes()
+
+        self.delete_order_window.destroy()
     # ======================================== GENERAL UTILITY FUNCTIONS ========================================
     
     def logout(self):
