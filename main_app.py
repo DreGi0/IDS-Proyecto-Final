@@ -28,6 +28,7 @@ class MainApp():
 
         # ----- Variables para campos de entrada -----
         self.student_table = load_student_data("data/students_data.xlsx")
+
         self.setup_app(root_window)
 
         self.setup_styles()
@@ -112,6 +113,7 @@ class MainApp():
         welcome_label.grid(column=0, row=0, columnspan=2, sticky='N, E, W', pady=50)
 
         self.setup_role_selection()
+        self.setup_login_fields(self.login_frame)
 
     def setup_role_selection(self):
 
@@ -122,7 +124,6 @@ class MainApp():
         intruction_label.grid(column=0, row=1,sticky="W, E", padx=6)
 
         self.setup_login_combobox()
-        self.setup_login_fields()
 
     def setup_login_combobox(self):
 
@@ -131,9 +132,9 @@ class MainApp():
         role_combobox.current(0)
         role_combobox.bind("<<ComboboxSelected>>", self.handle_login_fields)
 
-    def setup_login_fields(self):
+    def setup_login_fields(self, parent):
     
-        self.login_fields_frame = ttk.Frame(self.login_frame, width=450, height=100, style=self.LOGIN_FRAME)
+        self.login_fields_frame = ttk.Frame(parent, width=450, height=100, style=self.LOGIN_FRAME)
         self.login_fields_frame.grid(column=0, row=2, columnspan=2, pady=10)
 
         self.handle_login_fields()
@@ -208,13 +209,13 @@ class MainApp():
             self.show_login_message(f"Error: {e}")
 
     # -------------------- VALIDACIÓN DE ADMINISTRADOR --------------------
-    def validate_admin(self, username, password):
+    def validate_admin(self, username, password, run_logic = True):
 
-        is_valid, message = validate_credentials(username, password)
+        is_valid, message, self.current_admin_info = validate_credentials(username, password)
 
         if is_valid:
             self.show_login_message(message, "green")
-            self.display_admin_window()
+            self.setup_admin_frame()
         else:
             self.show_login_message(message)
         
@@ -311,31 +312,133 @@ class MainApp():
 
     # ======================================== ADMIN MAIN WINDOW ========================================
 
-    def display_admin_window(self):
+    def setup_admin_frame(self):
 
         self.clear_frame(self.mainframe)
+        self.mainframe.configure(padding="0 0 0 0")
+
+        # Configuración del frame de información del estudiante
+        self.admin_info_frame = ttk.Frame(self.mainframe, width=300, height=600, style=self.STUDENT_BG_INFO_FRAME)
+        self.admin_info_frame.grid(column=1, row=0)
+        self.admin_info_frame.grid_propagate(False)
+
+        # Imagen y etiquetas de información del estudiante en el frame de información
+        st_menu_resized_separator_image = get_image("Media/User.png", 50, 50)
+        self.student_image_separator = ImageTk.PhotoImage(st_menu_resized_separator_image)
+        ttk.Label(self.admin_info_frame, image=self.student_image_separator).grid(column=0, row=0, sticky="n", pady=(10, 5))
+        
+        ttk.Label(self.admin_info_frame, text=self.current_admin_info["name"], style=self.HEADER1).grid(column=0, row=1)
+        ttk.Label(self.admin_info_frame, text=self.current_admin_info["email"], style=self.HEADER1).grid(column=0, row=2)
+
+        ttk.Button(self.admin_info_frame, text="Listado de alumnos", command=self.show_student_list).grid(column=0, row=3)
+        ttk.Button(self.admin_info_frame, text="Pedidos", command=self.show_order_list).grid(column=0, row=4)
+        ttk.Button(self.admin_info_frame, text="Cambiar contraseña", command=self.setup_change_password_frame).grid(column=0, row=5)
 
         
-        self.admin_frame = ttk.Frame(self.mainframe)
-        self.admin_frame.grid(column=0, row=0)
-        self.admin_frame.propagate(True)
+        # Botón de cerrar sesión en el frame de información
+        ttk.Button(self.admin_info_frame, text="Cerrar sesión", command=self.logout).grid(column=0, row=6)
 
-        welcome_label = ttk.Label(self.admin_frame, text=f"Bienvenido {self.admin_user.get()}", style=self.HEADER1, background="grey80", anchor='center')
-        welcome_label.grid(column=0, row=0, columnspan=2, sticky='N, E, W', pady=50)
+        self.admin_data_frame = ttk.Frame(self.mainframe, width=900, height=600)
+        self.admin_data_frame.grid(column=0, row=0)
+        self.admin_data_frame.grid_propagate(False)
+        
+        # Etiqueta de bienvenida en el frame del menú
+        ttk.Label(self.admin_data_frame, text="Bienvenido", style=self.HEADER1).grid(column=0, row=0)
 
-        self.admin_frame.columnconfigure(0, weight=2)
-        self.admin_frame.columnconfigure(1, weight=1)
+        self.student_list_frame = ttk.Frame(self.admin_data_frame, style=self.STUDENT_MENU_FRAME)
+        self.student_list_frame.grid(column=0, row=1)
+        self.student_list_frame.grid_propagate(False)
+    
+    def show_student_list(self):
+        self.clear_frame(self.student_list_frame)
 
-        ttk.Button(self.admin_frame, command=print(""), text="Administrar usuarios").grid(column=0, row=1)
-        ttk.Button(self.admin_frame, command=print(""), text="Ver ordenes del día").grid(column=1, row=1)
+        current_row = 1
+        
+        for i in format_student_data(self.student_table):
+            ttk.Label(self.admin_data_frame, text=i, style=self.STUDENT_MENU_FRAME).grid(column=0, row=current_row)
+            current_row += 1
 
+    def show_order_list(self):
+        self.clear_frame(self.student_list_frame)
 
+        current_row = 1
+        
+        for i in get_all_orders():
+            ttk.Label(self.admin_data_frame, text=i, style=self.STUDENT_MENU_FRAME).grid(column=0, row=current_row)
+            current_row += 1
 
-        ttk.Button(self.admin_frame, command=print(""), text="Cambiar contraseña").grid(column=2, row=3)
+    # ======================================== CHANGE PASSWORD WINDOW ========================================
+    def setup_change_password_frame(self):
+        # Crear una nueva ventana de cambio de contraseña
+        self.change_password_window = Toplevel()
+        self.change_password_window.title("Cambiar contraseña")
+        self.change_password_window.geometry("400x300")
+        
+        # Frame de cambio de contraseña
+        self.change_password_frame = ttk.Frame(self.change_password_window, padding="20")
+        self.change_password_frame.grid(column=0, row=0, sticky=(N, S, E, W))
+        
+        # Etiqueta y campo de entrada para la contraseña actual
+        current_password_label = ttk.Label(self.change_password_frame, text="Contraseña actual:", style=self.HEADER2)
+        current_password_label.grid(column=0, row=0, pady=(10, 5))
+        self.current_password = StringVar()
+        current_password_entry = ttk.Entry(self.change_password_frame, textvariable=self.current_password, show="*")
+        current_password_entry.grid(column=1, row=0, padx=10)
+        
+        # Etiqueta y campo de entrada para la nueva contraseña
+        new_password_label = ttk.Label(self.change_password_frame, text="Nueva contraseña:", style=self.HEADER2)
+        new_password_label.grid(column=0, row=1, pady=(10, 5))
+        self.new_password = StringVar()
+        new_password_entry = ttk.Entry(self.change_password_frame, textvariable=self.new_password, show="*")
+        new_password_entry.grid(column=1, row=1, padx=10)
+        
+        # Etiqueta y campo de entrada para confirmar la nueva contraseña
+        confirm_password_label = ttk.Label(self.change_password_frame, text="Confirmar contraseña:", style=self.HEADER2)
+        confirm_password_label.grid(column=0, row=2, pady=(10, 5))
+        self.confirm_password = StringVar()
+        confirm_password_entry = ttk.Entry(self.change_password_frame, textvariable=self.confirm_password, show="*")
+        confirm_password_entry.grid(column=1, row=2, padx=10)
+        
+        # Botón para confirmar el cambio de contraseña
+        change_button = ttk.Button(self.change_password_frame, text="Cambiar contraseña", command=self.process_change_password)
+        change_button.grid(column=0, row=3, columnspan=2, pady=(20, 10))
 
+    def process_change_password(self):
+        current_password = self.current_password.get()
+        new_password = self.new_password.get()
+        confirm_password = self.confirm_password.get()
 
-        back = ttk.Button(self.admin_frame, text="Logout", command=self.logout)
-        back.grid(column=1, row=3)
+        # Validar las contraseñas
+        if current_password == self.admin_pass.get():  # Asume que la contraseña actual se almacena en self.admin_pass
+            # Verificar que la nueva contraseña no esté vacía, que no contenga espacios y tenga al menos 3 caracteres
+            if len(new_password) < 3:
+                self.show_change_pass_message("La nueva contraseña debe tener al menos 3 caracteres", color="red")
+            elif " " in new_password:
+                self.show_change_pass_message("La nueva contraseña no debe contener espacios", color="red")
+            elif new_password == "":
+                self.show_change_pass_message("La nueva contraseña no debe estar vacía", color="red")
+            elif new_password != confirm_password:
+                self.show_change_pass_message("Las nuevas contraseñas no coinciden", color="red")
+            else:
+                # Actualizar la contraseña si pasa todas las validaciones
+                update_password(self.admin_user.get(), new_password)
+                self.show_change_pass_message("Contraseña actualizada con éxito", color="green")
+                self.change_password_window.destroy()
+        else:
+            self.show_change_pass_message("Contraseña actual incorrecta", color="red")
+
+    # Método adicional para abrir la ventana de cambio de contraseña
+    def open_change_password_window(self):
+        self.setup_change_password_frame()
+
+    def show_change_pass_message(self, message, color="red"):
+            
+            self.clear_error_message()
+
+            error_label = ttk.Label(self.change_password_frame, text=message, foreground=color, style=self.LOGIN_ERR)
+            error_label.grid(column=0, row=4, columnspan=2)
+
+            self.clear_error_message_pass = error_label
 
     # ======================================== GENERAL UTILITY FUNCTIONS ========================================
     
@@ -349,7 +452,10 @@ class MainApp():
         
 
     def clear_error_message(self):
+        if hasattr(self, 'error_message_widget') and self.error_message_widget.winfo_ismapped():
+            self.error_message_widget.grid_forget()
 
+    def clear_error_message_pass(self):
         if hasattr(self, 'error_message_widget') and self.error_message_widget.winfo_ismapped():
             self.error_message_widget.grid_forget()
 

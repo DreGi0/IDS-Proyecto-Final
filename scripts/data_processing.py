@@ -6,6 +6,7 @@ import os
 password_file_path = os.path.join("data/json", "admin_password.json")
 orders_file_path = os.path.join("data/json", "orders.json")
 
+# ======================================== STUDENT DATA ========================================
 def load_student_data(file_path):
     try:
         return pd.read_excel(file_path, sheet_name="Student_IDs")
@@ -24,26 +25,27 @@ def get_student_name_by_id(student_data, student_id):
         print(f"Error fetching name for ID {student_id}: {e}")
         return None
 
+# ======================================== ADMIN DATA ========================================
 def validate_credentials(username, password):
-    # Intentar cargar los usuarios del archivo JSON
     try:
         with open(password_file_path, 'r') as f:
             users = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return False, "No se encontraron usuarios o el archivo está corrupto."
 
-    # Verificar si el usuario existe
     if username in users:
-        # Obtener la contraseña cifrada del usuario
         hashed_password = users[username]['password'].encode('utf-8')
         
-        # Verificar si la contraseña proporcionada coincide
         if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-            return True, "Credenciales correctas."
+            # Devuelve True, mensaje de éxito y los datos del usuario
+            return True, "Credenciales correctas.", {
+                "name": username,
+                "email": users[username]['email']
+            }
         else:
-            return False, "Contraseña incorrecta."
+            return False, "Contraseña incorrecta.", None
     else:
-        return False, "Usuario no encontrado."
+        return False, "Usuario no encontrado.", None
 
 def save_admin_credentials(username, password, email=None):
 
@@ -91,6 +93,7 @@ def update_password(username, new_password):
     else:
         print(f"Usuario {username} no encontrado.")
 
+# ======================================== ORDERS DATA ========================================
 def save_student_order(st_name, st_id, plate, salad, drink, accompaniment):
     order_data = {
         f"{st_id} {st_name}": {
@@ -113,3 +116,43 @@ def save_student_order(st_name, st_id, plate, salad, drink, accompaniment):
     with open(orders_file_path, 'w') as f:
         json.dump(orders, f, indent=4)
 
+
+def format_student_data(student_data):
+    formatted_data = []
+    try:
+        # Iterar sobre cada fila y añadir cada registro como un subarray
+        for index, row in student_data.iterrows():
+            formatted_data.append([
+                row['Student ID'],
+                row['Name'],
+                bool(row['Scholarship'])  # Convierte a bool para indicar si tiene beca o no
+            ])
+    except KeyError:
+        print("Error: asegúrate de que las columnas 'Student ID', 'Name' y 'Scholarship' existen en el archivo de Excel.")
+    except Exception as e:
+        print(f"Error al procesar los datos de estudiantes: {e}")
+    return formatted_data
+
+def get_all_orders():
+    try:
+        # Cargar los pedidos desde el archivo JSON
+        with open(orders_file_path, 'r') as f:
+            orders = json.load(f)
+        
+        # Formatear cada pedido en un array con la estructura deseada
+        formatted_orders = []
+        for student_key, order_details in orders.items():
+            # Extraer el ID del estudiante del nombre de clave (por ejemplo, "202401 Estudiante 1")
+            student_id = student_key.split()[0]
+            # Extraer la información y formatearla
+            formatted_orders.append([
+                student_id,
+                order_details.get("Plate"),
+                order_details.get("Salad"),
+                order_details.get("Accompaniment"),
+                order_details.get("Drink")
+            ])
+        return formatted_orders
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading orders data: {e}")
+        return []
