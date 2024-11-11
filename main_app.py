@@ -337,8 +337,6 @@ class MainApp():
         ttk.Button(self.admin_info_frame, text="Listado de alumnos", command=self.show_student_list).grid(column=0, row=3)
         ttk.Button(self.admin_info_frame, text="Pedidos", command=self.show_order_list).grid(column=0, row=4)
         ttk.Button(self.admin_info_frame, text="Cambiar contraseña", command=self.setup_change_password_frame).grid(column=0, row=5)
-
-
         
         # Botón de cerrar sesión en el frame de información
         ttk.Button(self.admin_info_frame, text="Cerrar sesión", command=self.logout).grid(column=0, row=6)
@@ -365,12 +363,12 @@ class MainApp():
             current_row += 1
 
     def show_order_list(self):
-        self.clear_frame(self.student_list_frame)
+        self.clear_frame(self.admin_data_frame)
 
         current_row = 1
         
         for i in get_all_orders():
-            ttk.Label(self.student_list_frame, text=i, style=self.STUDENT_MENU_FRAME).grid(column=0, row=current_row)
+            ttk.Label(self.admin_data_frame, text=i, style=self.STUDENT_MENU_FRAME).grid(column=0, row=current_row)
             current_row += 1
 
     # ======================================== CHANGE PASSWORD WINDOW ========================================
