@@ -1,7 +1,6 @@
-Link github https://github.com/DreGi0/IDS-Proyecto-Final
-# IDS - Proyecto Final
+# Introducción a la ingeniería de software - Proyecto Final
 
-Este repositorio contiene el proyecto final para la materia de Introducción al Desarrollo de Sowftware. A continuación, se presentan los detalles del equipo de trabajo, los requisitos para ejecutar el proyecto sin errores y las credenciales de prueba que puedes utilizar para probar las funciones de la aplicación.
+Este repositorio contiene el proyecto final para la materia de **Introducción al Desarrollo de Software**. A continuación, encontrarás detalles sobre los integrantes del equipo, los requisitos necesarios para ejecutar el proyecto sin errores y las credenciales de prueba para explorar las funciones de la aplicación.
 
 ## Integrantes del Equipo
 
@@ -13,55 +12,35 @@ Este repositorio contiene el proyecto final para la materia de Introducción al 
 
 ## Requisitos del Proyecto
 
-Este proyecto requiere algunas librerías de Python para su correcto funcionamiento. Asegúrate de que las siguientes librerías estén instaladas en tu entorno:
+Este proyecto necesita algunas librerías de Python. Verifica que tienes las siguientes librerías instaladas en tu entorno:
 
-> ⚠️ **Advertencia:** Si tienes problemas con el archivo, asegúrate de instalar las librerías necesarias
+> ⚠️ **Advertencia:** Si encuentras problemas con la ejecución del proyecto, revisa que estas librerías estén correctamente instaladas.
 
 > ### Windows
-> 
 > ```bash
-> pip install pandas
+> pip install pandas bcrypt openpyxl pillow
 > ```
-> ```bash
-> pip install bcrypt
-> ```
-> ```bash
-> pip install openpyxl
-> ```
-> ```bash
-> pip install pillow 
-> ```
-> 
+
 > ### MacOS
->                                                          
 > ```bash
-> python3 -m pip install "pandas"
-> ```
-> ```bash
-> python3 -m pip install "bcrypt"
-> ```
-> ```bash
-> python3 -m pip install "openpyxl"
-> ```
-> ```bash
-> python3 -m pip install "pillow"  
+> python3 -m pip install pandas bcrypt openpyxl pillow
 > ```
 
-Estas librerías son esenciales para manejar el cifrado de contraseñas y la manipulación de archivos Excel.
+Estas librerías son esenciales para el cifrado de contraseñas y la manipulación de archivos Excel.
 
-> 🔴 **Importante:** En caso de no poder iniciar sesión como estudiante o si ves el error en consola:
+> 🔴 **Importante:** Si no puedes iniciar sesión como estudiante o encuentras el error:
 > ```
 > Error loading the student data: [Errno 2] No such file or directory: 'data/students_data.xlsx'
 > ```
-> Verifica que tienes todo el proyecto abierto en el IDE (sin archivos sueltos fuera de la carpeta principal), y que los archivos de datos estén en la ubicación especificada (`data/students_data.xlsx`).
+> Asegúrate de tener todos los archivos en la estructura correcta del proyecto y que el archivo `data/students_data.xlsx` esté en la ubicación especificada.
 
-> 💡 **Tip:** Los ID de los estudiantes se encuentran en el archivo `data/students_data.xlsx`.
+> 💡 **Tip:** Los ID de los estudiantes están en `data/students_data.xlsx`.
+> 
+> 💡 **Tip:** Los perfiles de administrador están en `data/json/admin_password.json`.
 
-> 💡 **Tip:** Los perfiles de administradores se encuentran en el archivo `data/json/admin_password.json`.
+## Credenciales de Prueba
 
-## Usuarios y Contraseñas de Testeo
-
-Para fines de testeo, puedes utilizar los siguientes usuarios y contraseñas para probar la funcionalidad del proyecto:
+Para probar la funcionalidad del proyecto, utiliza los siguientes datos de acceso:
 
 ### Estudiantes
 | **ID** |  **Nombre**  |
@@ -73,13 +52,15 @@ Para fines de testeo, puedes utilizar los siguientes usuarios y contraseñas par
 | 202431 | Estudiante31 |
 
 ### Administradores
-| **Usuarios** | **Contraseñas** |
-| ------------ | --------------- |
-| admin        | 123             |
-| dre          | 321             |
+| **Usuario** | **Contraseña** |
+| ----------- | -------------- |
+| admin       | 123            |
+| dre         | 321            |
 
-**Nota:** Asegúrate de usar estas credenciales únicamente para testear las funciones y no para un uso real. Además, si deseas añadir más usuarios o cambiar contraseñas, puedes hacerlo directamente en los archivos `students_data.xlsx` y `admin_password.json` dentro de la carpeta `data`.
+**Nota:** Estas credenciales son solo para testeo. Si deseas agregar o modificar usuarios, puedes hacerlo en los archivos `students_data.xlsx` y `admin_password.json` en la carpeta `data`.
 
 ---
 
-¡Cruzamos dedos para que todo funcione y nos ponga 10!
+**¡Cruzamos los dedos para que todo funcione y consigamos el 10!**
+
+**[Link al repositorio en GitHub](https://github.com/DreGi0/IDS-Proyecto-Final)**
