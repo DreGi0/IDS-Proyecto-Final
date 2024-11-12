@@ -1,4 +1,4 @@
-# Introducción a la ingeniería de software - Proyecto Final
+# Introducción a la ingeniería de Software Proyecto Final
 
 Este repositorio contiene el proyecto final para la materia de **Introducción al Desarrollo de Software**. A continuación, encontrarás detalles sobre los integrantes del equipo, los requisitos necesarios para ejecutar el proyecto sin errores y las credenciales de prueba para explorar las funciones de la aplicación.
 
