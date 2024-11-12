@@ -68,8 +68,10 @@ class MainApp():
 
         self.style.configure("M.TLabel", background="red")
 
-        self.style.configure("H1.TLabel", foreground="black", font=("Consolas", 16, "bold"))
+        self.style.configure("H1.TLabel", foreground="black", font=("Consolas", 32, "bold"))
         self.style.configure("H2.TLabel", background="grey80", foreground="black", font=("Consolas", 11))
+        self.style.configure("H3.TLabel", background="grey80", foreground="black", font=("Consolas", 11))
+
         self.style.configure("LoginErr.TLabel", background="grey80", font=("Consolas", 9, "bold"))
 
         self.style.configure("STLogBG.TLabel", background="dodgerBlue4", font=("Consolas", 9, "bold"))
