@@ -15,9 +15,10 @@ Este repositorio contiene el proyecto final para la materia de Introducción al 
 
 Este proyecto requiere algunas librerías de Python para su correcto funcionamiento. Asegúrate de que las siguientes librerías estén instaladas en tu entorno:
 
-> ⚠️ **Advertencia:** Si tienes problemas con el archivo, asegúrate de instalar las librerías necesarias:
->
+> ⚠️ **Advertencia:** Si tienes problemas con el archivo, asegúrate de instalar las librerías necesarias
+
 > ### Windows
+> 
 > ```bash
 > pip install pandas
 > ```
@@ -31,7 +32,8 @@ Este proyecto requiere algunas librerías de Python para su correcto funcionamie
 > pip install pillow 
 > ```
 > 
-> ### Mac                                                          
+> ### MacOS
+>                                                          
 > ```bash
 > python3 -m pip install "pandas"
 > ```
