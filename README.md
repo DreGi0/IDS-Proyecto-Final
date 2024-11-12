@@ -74,7 +74,7 @@ Para fines de testeo, puedes utilizar los siguientes usuarios y contraseñas par
 | **Usuarios** | **Contraseñas** |
 | ------------ | --------------- |
 | admin        | 123             |
-| Dre          | 321             |
+| dre          | 321             |
 
 **Nota:** Asegúrate de usar estas credenciales únicamente para testear las funciones y no para un uso real. Además, si deseas añadir más usuarios o cambiar contraseñas, puedes hacerlo directamente en los archivos `students_data.xlsx` y `admin_password.json` dentro de la carpeta `data`.
 
