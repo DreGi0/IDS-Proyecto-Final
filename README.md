@@ -10,6 +10,10 @@ Este repositorio contiene el proyecto final para la materia de **Introducción a
 - Dana Liz Ochoa González
 - Oscar Marcelo Velásquez Zapata
 
+## Desarrollador
+
+- André Giovanni Iraheta Guevara
+  
 ## Requisitos del Proyecto
 
 Este proyecto necesita algunas librerías de Python. Verifica que tienes las siguientes librerías instaladas en tu entorno:
