@@ -16,7 +16,8 @@ Este repositorio contiene el proyecto final para la materia de Introducción al 
 Este proyecto requiere algunas librerías de Python para su correcto funcionamiento. Asegúrate de que las siguientes librerías estén instaladas en tu entorno:
 
 > ⚠️ **Advertencia:** Si tienes problemas con el archivo, asegúrate de instalar las librerías necesarias:
-> 
+>
+> ### Windows
 > ```bash
 > pip install pandas
 > ```
@@ -28,7 +29,21 @@ Este proyecto requiere algunas librerías de Python para su correcto funcionamie
 > ```
 > ```bash
 > pip install pillow 
-> ```                                                              
+> ```
+> 
+> ### Mac                                                          
+> ```bash
+> python3 -m pip install "pandas"
+> ```
+> ```bash
+> python3 -m pip install "bcrypt"
+> ```
+> ```bash
+> python3 -m pip install "openpyxl"
+> ```
+> ```bash
+> python3 -m pip install "pillow"  
+> ```
 
 Estas librerías son esenciales para manejar el cifrado de contraseñas y la manipulación de archivos Excel.
 
@@ -59,7 +74,7 @@ Para fines de testeo, puedes utilizar los siguientes usuarios y contraseñas par
 | **Usuarios** | **Contraseñas** |
 | ------------ | --------------- |
 | admin        | 123             |
-| Dre          | 321             |
+| dre          | 321             |
 
 **Nota:** Asegúrate de usar estas credenciales únicamente para testear las funciones y no para un uso real. Además, si deseas añadir más usuarios o cambiar contraseñas, puedes hacerlo directamente en los archivos `students_data.xlsx` y `admin_password.json` dentro de la carpeta `data`.
 
