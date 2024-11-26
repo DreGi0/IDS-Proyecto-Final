@@ -59,7 +59,14 @@ Para probar la funcionalidad del proyecto, utiliza los siguientes datos de acces
 | **Usuario** | **Contraseña** |
 | ----------- | -------------- |
 | admin       | 123            |
-| dre         | 321            |
+| debbie      | deb123         |
+| andre       | dre123         |
+| tiffany     | tif123         |
+| danna       | dan123         |
+| oscar       | osc123         |
+
+
+
 
 **Nota:** Estas credenciales son solo para testeo. Si deseas agregar o modificar usuarios, puedes hacerlo en los archivos `students_data.xlsx` y `admin_password.json` en la carpeta `data`.
 
