@@ -31,20 +31,22 @@ def validate_credentials(username, password):
         with open(password_file_path, 'r') as f:
             users = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        return False, "No se encontraron usuarios o el archivo está corrupto."
+        return False, "No se encontraron usuarios o el archivo está corrupto.", None
 
     if username in users:
         hashed_password = users[username]['password'].encode('utf-8')
         
         if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-            # Devuelve True, mensaje de éxito y los datos del usuario
+            # Returns True, success message, and user data
             return True, "Credenciales correctas.", {
                 "name": username,
                 "email": users[username]['email']
             }
         else:
+            # Invalid password
             return False, "Contraseña incorrecta.", None
     else:
+        # User not found
         return False, "Usuario no encontrado.", None
 
 def save_admin_credentials(username, password, email=None):
