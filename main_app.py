@@ -1,8 +1,11 @@
+# Importar librerias de Interfaz Grafica
 from tkinter import *
 from tkinter import ttk
 
+# Importar libreria de manejo de imagenes
 from PIL import Image, ImageTk 
 
+# Importar codigos propios del proyecto
 from scripts.data_processing import *
 from scripts.image_processing import *
 
@@ -25,6 +28,14 @@ version = "0.3.0 - prototype"
 class MainApp():
     # ======================================== INITIALIZE APP ========================================
     def __init__(self, root_window):
+        
+
+        # Variables para centrar pantalla
+        self.screen_width = root_window.winfo_screenwidth() 
+        self.screen_height = root_window.winfo_screenheight()
+
+        self.window_width = int(self.screen_width * 0.6) 
+        self.window_height = int(self.screen_height * 0.6) 
 
         # ----- Variables para campos de entrada -----
         self.student_table = load_student_data("data/students_data.xlsx")
@@ -51,12 +62,18 @@ class MainApp():
 
         # ----- Window properties -----
         root_window.title(f"CafeteriaGo version {version}")
-        self.mainframe = ttk.Frame(root_window, padding="10 20 10 20")
+        
+        # Asignar coordenadas X, Y para mostrar la ventana principal de forma centrada#
+        position_x = (self.screen_width - self.window_width) // 2
+        position_y = (self.screen_height - self.window_height) // 2
+        root_window.geometry(f"{self.window_width}x{self.window_height}+{position_x}+{position_y}")
+        self.mainframe = ttk.Frame(root_window)
 
         # ----- Main grid -----
         self.mainframe.grid(column=0, row=0)
-        root_window.columnconfigure(0, weight=1)
-        root_window.rowconfigure(0, weight=1)
+        # self.mainframe.grid(column=0, row=0, sticky="nsew")
+        root_window.grid_rowconfigure(0, weight=1)
+        root_window.grid_columnconfigure(0, weight=1)
 
     # ---------------------------------------- STYLES CONFIGURATION ---------------------------------------- 
     def setup_styles(self):
@@ -64,7 +81,7 @@ class MainApp():
         self.style = ttk.Style()
 
         self.style.configure("LoginFrame.TLabel", background="grey80")
-        self.style.configure("StudentMenuFrame.TLabel", background="lightCyan1")
+        self.style.configure("StudentMenuFrame.TLabel", background="white")
 
         self.style.configure("M.TLabel", background="red")
 
@@ -102,46 +119,53 @@ class MainApp():
     # ======================================== LOGIN WINDOW ========================================
     def setup_login_frame(self):
         self.clear_frame(self.mainframe)
-        
+        # Contenedor del login
+        self.login_frame = ttk.Frame(self.mainframe, width=self.window_width, height=self.window_height, padding=50)
+        self.login_frame.grid_propagate(False)
+
+        self.login_frame.grid_columnconfigure(0, weight=1)
+        self.login_frame.grid_columnconfigure(1, weight=3)
+        self.login_frame.grid_columnconfigure(2, weight=1)
+        self.login_frame.grid(column=0, row=0)
+
         st_menu_resized_separator_image = get_image("Media/esen_logo.png", 100, 100)
         self.student_image_user = ImageTk.PhotoImage(st_menu_resized_separator_image)
-        ttk.Label(self.mainframe, image=self.student_image_user).grid(column=0, row=0, sticky="n", pady=(0, 5))
+
+        esen_logo = ttk.Label(self.login_frame, image=self.student_image_user)
+        esen_logo.grid(column=1, row=0, pady=(0, 20))
+
+        welcome_label = ttk.Label(self.login_frame, text="¡Bienvenido!", style=self.HEADER1)
+        welcome_label.grid(column=1, row=1, pady=(0,20))
         
-        self.login_frame = ttk.Frame(self.mainframe, width=500, height=300, style=self.LOGIN_FRAME)
-        self.login_frame.grid(column=0, row=1)
-        self.login_frame.grid_propagate(True)
-
-        self.login_frame.columnconfigure(0, weight=1)
-        self.login_frame.columnconfigure(1, weight=1)
-
-
-        welcome_label = ttk.Label(self.login_frame, text="Login", style=self.HEADER1, background="grey80", anchor='center')
-        welcome_label.grid(column=0, row=0, columnspan=2, sticky='N, E, W', pady=50)
-
+        # Crear un frame para los campos del login
         self.setup_role_selection()
         self.setup_login_fields(self.login_frame)
 
     def setup_role_selection(self):
-
+        login_role_frame = ttk.Frame(self.login_frame)
+        login_role_frame.grid_rowconfigure(0, weight=1)
+        login_role_frame.grid_columnconfigure(0,weight=1)
+        login_role_frame.grid_columnconfigure(1,weight=1)
+        login_role_frame.grid(column=1, row=2, pady=(0,20))
         self.role = StringVar()
         self.ROLE_OPTIONS = ["Student", "Admin"]
 
-        intruction_label = ttk.Label(self.login_frame, text="Seleccione un rol: ", style=self.HEADER2, anchor='center')
-        intruction_label.grid(column=0, row=1,sticky="W, E", padx=6)
+        intruction_label = ttk.Label(login_role_frame, text="Seleccione un rol: ", style=self.HEADER2, anchor='center')
+        intruction_label.grid(column=0, row=0, padx=5)
 
-        self.setup_login_combobox()
+        self.setup_login_combobox(login_role_frame)
 
-    def setup_login_combobox(self):
+    def setup_login_combobox(self, parent):
 
-        role_combobox = ttk.Combobox(self.login_frame, textvariable=self.role, values=self.ROLE_OPTIONS, state='readonly')
-        role_combobox.grid(column=1, row=1, sticky='W, E', padx=10) 
+        role_combobox = ttk.Combobox(parent, textvariable=self.role, values=self.ROLE_OPTIONS, state='readonly')
+        role_combobox.grid(column=1, row=0) 
         role_combobox.current(0)
         role_combobox.bind("<<ComboboxSelected>>", self.handle_login_fields)
 
     def setup_login_fields(self, parent):
     
-        self.login_fields_frame = ttk.Frame(parent, width=450, height=100, style=self.LOGIN_FRAME)
-        self.login_fields_frame.grid(column=0, row=2, columnspan=2, pady=10)
+        self.login_fields_frame = ttk.Frame(parent, style=self.LOGIN_FRAME)
+        self.login_fields_frame.grid(column=1, row=3)
 
         self.handle_login_fields()
 
@@ -239,35 +263,55 @@ class MainApp():
     def setup_student_frame(self):
         # Limpia el contenido de mainframe
         self.clear_frame(self.mainframe)
-        self.mainframe.configure(padding="0 0 0 0")
+        
+        # Frame de Estudiante
+        self.student_frame = ttk.Frame(self.mainframe, width=self.window_width, height=self.window_height)
 
+        self.student_frame.grid_rowconfigure(0, weight=1)
+        self.student_frame.grid_columnconfigure(0, weight=3)
+        self.student_frame.grid_columnconfigure(1, weight=2)
+        self.student_frame.grid_propagate(False)
+        self.student_frame.grid(column=0,row=0)
+    
         # Configuración del frame de información del estudiante
-        self.student_info_frame = ttk.Frame(self.mainframe, width=300, height=600, style=self.STUDENT_BG_INFO_FRAME)
-        self.student_info_frame.grid(column=1, row=0)
+        self.student_info_frame = ttk.Frame(self.student_frame, style=self.STUDENT_BG_INFO_FRAME, padding=20)
+        self.student_info_frame.grid(column=1, row=0, sticky="nsew")
+
+        self.student_info_frame.grid_columnconfigure(0, weight=1)
+        self.student_info_frame.grid_columnconfigure(1, weight=2)
+        self.student_info_frame.grid_columnconfigure(2, weight=1)
         self.student_info_frame.grid_propagate(False)
 
         # Imagen y etiquetas de información del estudiante en el frame de información
         st_menu_resized_separator_image = get_image("Media/User.png", 50, 50)
         self.student_image_user = ImageTk.PhotoImage(st_menu_resized_separator_image)
-        ttk.Label(self.student_info_frame, image=self.student_image_user).grid(column=0, row=0, sticky="n", pady=(10, 5))
+        ttk.Label(self.student_info_frame, image=self.student_image_user, background="dodgerBlue4").grid(column=1, row=0, sticky="n", pady=(10, 5))
         
-        ttk.Label(self.student_info_frame, text=self.student_name, style=self.HEADER1).grid(column=0, row=1)
-        ttk.Label(self.student_info_frame, text=self.student_id.get(), style=self.HEADER1).grid(column=0, row=2)
+        ttk.Label(self.student_info_frame, text=self.student_name, style=self.HEADER1, background="dodgerBlue4").grid(column=1, row=1, sticky="nsew")
+        ttk.Label(self.student_info_frame, text=self.student_id.get(), style=self.HEADER1, background="dodgerBlue4").grid(column=1, row=2,sticky="nsew")
         
         # Botón de cerrar sesión en el frame de información
-        ttk.Button(self.student_info_frame, text="Cerrar sesión", command=self.logout).grid(column=0, row=3)
+        ttk.Button(self.student_info_frame, text="Cerrar sesión", command=self.logout).grid(column=1, row=3,sticky="nsew")
         
         # Configuración del frame principal del menú del estudiante
-        self.student_menu_frame = ttk.Frame(self.mainframe, width=900, height=600, style=self.STUDENT_MENU_FRAME)
-        self.student_menu_frame.grid(column=0, row=0)
-        self.student_menu_frame.grid_propagate(False)
+        self.student_menu_frame = ttk.Frame(self.student_frame, style=self.STUDENT_MENU_FRAME, padding="20")
+        self.student_menu_frame.grid(column=0, row=0, sticky="nsew")
+
+        self.student_menu_frame.grid_columnconfigure(0, weight=1)
+        self.student_menu_frame.grid_columnconfigure(1, weight=1)
+        self.student_menu_frame.grid_columnconfigure(2, weight=1)
+        self.student_menu_frame.grid_columnconfigure(3, weight=1)
+        
+        self.student_menu_frame.grid_columnconfigure(0, weight=1)
+        self.student_menu_frame.grid_columnconfigure(1, weight=4)
+        self.student_menu_frame.grid_columnconfigure(2, weight=1)
         
         # Etiqueta de bienvenida en el frame del menú
-        ttk.Label(self.student_menu_frame, text="Bienvenido", style=self.HEADER1).grid(column=0, row=0)
+        ttk.Label(self.student_menu_frame, text="Bienvenido", style=self.HEADER1, background="white").grid(column=1, row=0, sticky="n")
         
         # Configuración del frame de opciones del menú del estudiante
-        self.student_menu_options_frame = ttk.Frame(self.student_menu_frame, style=self.STUDENT_BG_INFO_FRAME)
-        self.student_menu_options_frame.grid(column=0, row=2)
+        self.student_menu_options_frame = ttk.Frame(self.student_menu_frame, style=self.STUDENT_MENU_FRAME)
+        self.student_menu_options_frame.grid(column=1, row=1)
         
         # Diccionario de opciones para cada categoría
         self.menu_options = {
@@ -278,13 +322,13 @@ class MainApp():
         }
 
         # Botones en el frame de opciones del menú
-        ttk.Button(self.student_menu_options_frame, text="Plato fuerte", command=lambda: self.show_menu_options("Plato fuerte")).grid(column=0, row=0)
-        ttk.Button(self.student_menu_options_frame, text="Ensalada", command=lambda: self.show_menu_options("Ensalada")).grid(column=0, row=1)
-        ttk.Button(self.student_menu_options_frame, text="Acompañamiento", command=lambda: self.show_menu_options("Acompañamiento")).grid(column=0, row=2)
-        ttk.Button(self.student_menu_options_frame, text="Bebida", command=lambda: self.show_menu_options("Bebida")).grid(column=0, row=3)
+        ttk.Button(self.student_menu_options_frame, text="Plato fuerte", command=lambda: self.show_menu_options("Plato fuerte")).grid(column=1, row=0, pady=5)
+        ttk.Button(self.student_menu_options_frame, text="Ensalada", command=lambda: self.show_menu_options("Ensalada")).grid(column=1, row=1, pady=5)
+        ttk.Button(self.student_menu_options_frame, text="Acompañamiento", command=lambda: self.show_menu_options("Acompañamiento")).grid(column=1, row=2, pady=5)
+        ttk.Button(self.student_menu_options_frame, text="Bebida", command=lambda: self.show_menu_options("Bebida")).grid(column=1, row=3, pady=5)
 
         # Frame donde se mostrarán las opciones seleccionadas
-        self.student_menu_served_frame = ttk.Frame(self.student_menu_frame, style=self.STUDENT_BG_INFO_FRAME)
+        self.student_menu_served_frame = ttk.Frame(self.student_menu_frame, style=self.STUDENT_MENU_FRAME)
         self.student_menu_served_frame.grid(column=1, row=2)
 
     def show_menu_options(self, category):
@@ -294,11 +338,12 @@ class MainApp():
         
         # Obtener las opciones de la categoría seleccionada
         options = self.menu_options.get(category, [])
-
+        
+        ttk.Label(self.student_menu_served_frame, text=f"Opciones para {category}:", background="white").grid(column=0,row=0)
         # Crear un botón para cada opción en `student_menu_served_frame`
         for idx, option in enumerate(options):
             ttk.Button(self.student_menu_served_frame, text=option, 
-                       command=lambda opt=option, cat=category: self.select_option(opt, cat)).grid(column=0, row=idx, pady=(5, 5))
+                       command=lambda opt=option, cat=category: self.select_option(opt, cat)).grid(column=0, row=idx+1, pady=(5, 5))
 
     def select_option(self, option, category):
         # Asignar la opción seleccionada a la variable correspondiente según la categoría
@@ -321,35 +366,58 @@ class MainApp():
     def setup_admin_frame(self):
 
         self.clear_frame(self.mainframe)
-        self.mainframe.configure(padding="0 0 0 0")
+        
+        self.admin_frame = ttk.Frame(self.mainframe, width=self.window_width, height=self.window_height)
+
+        self.admin_frame.grid_rowconfigure(0, weight=1)
+        self.admin_frame.grid_columnconfigure(0, weight=3)
+        self.admin_frame.grid_columnconfigure(1, weight=2)
+        self.admin_frame.grid_propagate(False)
+        self.admin_frame.grid(column=0, row=0, sticky="nsew")
 
         # Configuración del frame de información del estudiante
-        self.admin_info_frame = ttk.Frame(self.mainframe, width=300, height=600, style=self.STUDENT_BG_INFO_FRAME)
-        self.admin_info_frame.grid(column=1, row=0)
-        self.admin_info_frame.grid_propagate(False)
+        self.admin_info_frame = ttk.Frame(self.admin_frame, style=self.STUDENT_BG_INFO_FRAME)
+
+        self.admin_info_frame.grid_columnconfigure(0, weight=1)
+        self.admin_info_frame.grid_columnconfigure(1, weight=3)
+        self.admin_info_frame.grid_columnconfigure(2, weight=1)
+        self.admin_info_frame.grid(column=1, row=0, sticky="nsew")
 
         # Imagen y etiquetas de información del estudiante en el frame de información
         st_menu_resized_separator_image = get_image("Media/User.png", 50, 50)
         self.student_image_user = ImageTk.PhotoImage(st_menu_resized_separator_image)
-        ttk.Label(self.admin_info_frame, image=self.student_image_user).grid(column=0, row=0, sticky="n", pady=(10, 5))
-        
-        ttk.Label(self.admin_info_frame, text=self.current_admin_info["name"], style=self.HEADER1).grid(column=0, row=1)
-        ttk.Label(self.admin_info_frame, text=self.current_admin_info["email"], style=self.HEADER1).grid(column=0, row=2)
 
-        ttk.Button(self.admin_info_frame, text="Listado de alumnos", command=self.show_student_list).grid(column=0, row=3)
-        ttk.Button(self.admin_info_frame, text="Pedidos", command=self.show_order_list).grid(column=0, row=4)
-        ttk.Button(self.admin_info_frame, text="Cambiar contraseña", command=self.setup_change_password_frame).grid(column=0, row=5)
+        admin_user_image = ttk.Label(self.admin_info_frame, image=self.student_image_user, background="dodgerBlue4")
+        admin_user_image.grid(column=1, row=0, sticky="n", pady=(0,10))
+
+        admin_user_name  = ttk.Label(self.admin_info_frame, text=self.current_admin_info["name"], style=self.HEADER2, background="dodgerBlue4")
+        admin_user_name.grid(column=1, row=1, pady=(0,10))
+
+        admin_user_email = ttk.Label(self.admin_info_frame, text=self.current_admin_info["email"], style=self.HEADER2, background="dodgerBlue4")
+        admin_user_email.grid(column=1, row=2, pady=(0,10))
+
+        admin_user_list_students = ttk.Button(self.admin_info_frame, text="Listado de alumnos", command=self.show_student_list)
+        admin_user_list_students.grid(column=1, row=3, pady=(0,10))
+
+        admin_user_list_orders = ttk.Button(self.admin_info_frame, text="Pedidos", command=self.show_order_list)
+        admin_user_list_orders.grid(column=1, row=4, pady=(0,10))
+
+        admin_user_change_password = ttk.Button(self.admin_info_frame, text="Cambiar contraseña", command=self.setup_change_password_frame)
+        admin_user_change_password.grid(column=1, row=5, pady=(0,10))
         
         # Botón de cerrar sesión en el frame de información
-        ttk.Button(self.admin_info_frame, text="Cerrar sesión", command=self.logout).grid(column=0, row=6)
-        ttk.Button(self.admin_info_frame, text="Borrar pedidos", command=self.setup_delete_orders_frame).grid(column=0, row=7)
+        admin_user_logout = ttk.Button(self.admin_info_frame, text="Cerrar sesión", command=self.logout)
+        admin_user_logout.grid(column=1, row=6, pady=(0,10))
 
-        self.admin_data_frame = ttk.Frame(self.mainframe, width=900, height=600)
+        admin_user_delete_orders = ttk.Button(self.admin_info_frame, text="Borrar pedidos", command=self.setup_delete_orders_frame)
+        admin_user_delete_orders.grid(column=1, row=7, pady=(0,10))
+
+        self.admin_data_frame = ttk.Frame(self.admin_frame, width=900, height=600)
         self.admin_data_frame.grid(column=0, row=0)
         self.admin_data_frame.grid_propagate(False)
         
         # Etiqueta de bienvenida en el frame del menú
-        ttk.Label(self.admin_data_frame, text="Bienvenido", style=self.HEADER1).grid(column=0, row=0)
+        ttk.Label(self.admin_data_frame, text="¡Bienvenido!", style=self.HEADER1).grid(column=0, row=0)
 
         self.student_list_frame = ttk.Frame(self.admin_data_frame, style=self.STUDENT_MENU_FRAME)
         self.student_list_frame.grid(column=0, row=1)

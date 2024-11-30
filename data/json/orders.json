@@ -4,5 +4,23 @@
         "Accompaniment": "Arroz",
         "Salad": "C\u00e9sar",
         "Drink": "Agua"
+    },
+    "202402 Estudiante 2": {
+        "Plate": "Carne",
+        "Accompaniment": "Papas",
+        "Salad": "Mixta",
+        "Drink": "Jugo"
+    },
+    "202403 Estudiante 3": {
+        "Plate": "Pescado",
+        "Accompaniment": "Papas",
+        "Salad": "De pasta",
+        "Drink": "Refresco"
+    },
+    "202404 Estudiante 4": {
+        "Plate": "Vegetariano",
+        "Accompaniment": "Pan",
+        "Salad": "Caprese",
+        "Drink": "Caf\u00e9"
     }
 }
